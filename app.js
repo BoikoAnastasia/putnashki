@@ -3,6 +3,7 @@ const arrNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1
 var ouputTime = document.querySelector(".time");
 const btn_reset = document.querySelector("#btn_reset");
 var audioSonic = new Audio('Sonic.mp3');
+let isStart = false;
 
 randomDivNumber();
 
@@ -10,7 +11,7 @@ randomDivNumber();
 function printNumbers(from, to) {
     let current = from;
 
-    
+
     function go() {
         ouputTime.textContent = `Оставшееся время: ${current}`;
         if (current == to) {
@@ -21,10 +22,13 @@ function printNumbers(from, to) {
             ouputTime.textContent = 'Вы проиграли';
             var audio = new Audio('wasted.mp3');
             audio.play();
+            isStart = false;
+            btn_reset.disabled = false;
         }
     }
     go();
     let timerId = setInterval(go, 1000);
+    
 }
 
 function randomDivNumber() {
@@ -49,6 +53,8 @@ function randomDivNumber() {
 
 
 btn_reset.addEventListener('click', () => {
+    isStart = true;
+    btn_reset.disabled = true
     randomDivNumber();
     printNumbers(18, 1);
     audioSonic.play();
@@ -61,13 +67,17 @@ btn_reset.addEventListener('click', () => {
     count = 1;
     printNumbers(18, 1);
     sonicPlay();
+    
 });
 
 
 items.forEach(element => {
     element.addEventListener('click', (e) => {
         e.preventDefault();
-        checkItem(element);
+        if (isStart==true) {
+            checkItem(element);
+        }
+
     });
 });
 
@@ -84,5 +94,7 @@ function checkItem(item) {
     }
     if (count == 26) {
         ouputTime.textContent = "Вы выйграли!";
+        isStart = false;
+        btn_reset.disabled = false;
     }
 }
